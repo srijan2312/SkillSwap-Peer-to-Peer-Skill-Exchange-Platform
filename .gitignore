@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Environment variables (never commit real secrets)
+.env
+.env.local
+
+# Build output
+dist/
+build/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Local MongoDB data (used only for local dev on this machine)
+.mongodb/
+
+server/uploads/*
+!server/uploads/.gitkeep
+server/uploads/avatars/*
+!server/uploads/avatars/.gitkeep
