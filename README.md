@@ -1,697 +1,733 @@
 # SkillSwap — Peer-to-Peer Skill Exchange Platform
 
-> A full-stack platform where people exchange skills instead of money.
+> A full-stack MERN application where people exchange skills with each other instead of paying for courses.
+> **"I teach you what I know, and you teach me what you know."**
 
-SkillSwap is a MERN-based peer-to-peer skill exchange platform that helps users find people who can teach what they want to learn while learning from what they already know.
-
-Users can create profiles, manage the skills they teach and want to learn, discover compatible users, send skill-swap requests, manage exchanges, complete swaps, and leave ratings and reviews.
-
-[![Live Demo](https://img.shields.io/badge/Live-Demo-8B5CF6?style=for-the-badge)](https://skill-swap-peer-to-peer-skill-excha-lovat.vercel.app)
-[![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github)](https://github.com/srijan2312/SkillSwap-Peer-to-Peer-Skill-Exchange-Platform)
-
----
-
-## 🌐 Live Demo
-
-### Frontend
-
-https://skill-swap-peer-to-peer-skill-excha-lovat.vercel.app
-
-### Backend API
-
-https://skillswap-api-ul44.onrender.com
-
-### GitHub Repository
-
-https://github.com/srijan2312/SkillSwap-Peer-to-Peer-Skill-Exchange-Platform
+[![Live Demo](https://img.shields.io/badge/Live-Demo-000000?style=for-the-badge)](https://skill-swap-peer-to-peer-skill-excha-lovat.vercel.app)
+[![Frontend](https://img.shields.io/badge/Frontend-Vercel-000000?style=for-the-badge&logo=vercel)](https://skill-swap-peer-to-peer-skill-excha-lovat.vercel.app)
+[![Backend](https://img.shields.io/badge/Backend-Render-46E3B7?style=for-the-badge&logo=render)](https://skillswap-api-ul44.onrender.com)
+[![Database](https://img.shields.io/badge/Database-MongoDB-47A248?style=for-the-badge&logo=mongodb)](https://www.mongodb.com/)
 
 ---
 
-## 📌 Table of Contents
+## Table of Contents
 
-- [Overview](#-overview)
-- [Problem Statement](#-problem-statement)
-- [How SkillSwap Works](#-how-skillswap-works)
-- [Features](#-features)
-- [User Workflow](#-user-workflow)
-- [Matching System](#-matching-system)
-- [Swap Request Lifecycle](#-swap-request-lifecycle)
-- [Tech Stack](#-tech-stack)
-- [System Architecture](#-system-architecture)
-- [Database Design](#-database-design)
-- [Authentication & Security](#-authentication--security)
-- [API Overview](#-api-overview)
-- [Project Structure](#-project-structure)
-- [Getting Started](#-getting-started)
-- [Environment Variables](#-environment-variables)
-- [Running the Application](#-running-the-application)
-- [Docker](#-docker)
-- [Testing](#-testing)
-- [Deployment](#-deployment)
-- [Engineering Decisions](#-engineering-decisions)
-- [Challenges & Solutions](#-challenges--solutions)
-- [Future Improvements](#-future-improvements)
-- [Author](#-author)
+- [Overview](#overview)
+- [Problem Statement](#problem-statement)
+- [Solution](#solution)
+- [Example](#example)
+- [Key Features](#key-features)
+- [User Workflow](#user-workflow)
+- [Matching System](#matching-system)
+- [Swap Request Lifecycle](#swap-request-lifecycle)
+- [Tech Stack](#tech-stack)
+- [System Architecture](#system-architecture)
+- [Database Design](#database-design)
+- [Authentication and Security](#authentication-and-security)
+- [API Overview](#api-overview)
+- [Project Structure](#project-structure)
+- [Getting Started](#getting-started)
+- [Environment Variables](#environment-variables)
+- [Running the Application](#running-the-application)
+- [Docker](#docker)
+- [Testing](#testing)
+- [Deployment](#deployment)
+- [Engineering Decisions](#engineering-decisions)
+- [Challenges and Solutions](#challenges-and-solutions)
+- [Future Improvements](#future-improvements)
+- [Current Project Scope](#current-project-scope)
+- [Author](#author)
 
 ---
 
-# 🚀 Overview
+## Overview
 
-Traditional learning platforms generally follow a paid model where users purchase courses or pay instructors.
+SkillSwap is a full-stack peer-to-peer skill exchange platform built with the MERN stack.
 
-SkillSwap uses a different approach:
+Instead of paying for a course or searching through unrelated communities, users can find people who:
 
-> **Exchange knowledge instead of money.**
+- Have skills they want to learn
+- Want to learn skills they already know
+- Are available for a skill exchange
 
-The idea is simple:
+For example:
 
-```text
-I teach what I know
-        +
-You teach what you know
-        ↓
-We exchange knowledge
-```
+> I know React and want to learn Docker.
+> Another user knows Docker and wants to learn React.
+> SkillSwap identifies the complementary match and allows both users to start a skill swap.
 
-### Example
+The application supports the complete workflow:
 
-**User A**
+**Register → Build Profile → Add Skills → Discover Matches → Send Swap Request → Accept/Reject → Complete Swap → Review**
 
-```text
-Can Teach:
+The project was designed to demonstrate real full-stack development concepts rather than only basic CRUD operations.
+
+---
+
+## Problem Statement
+
+Learning a new skill often requires:
+
+- Paying for courses
+- Searching through multiple platforms
+- Finding instructors
+- Joining communities
+- Spending time looking for the right person
+
+At the same time, most people already have useful skills that they could teach to someone else.
+
+The problem is that there is no simple way to discover:
+
+> "Someone who can teach me what I want to learn and also wants to learn what I already know."
+
+SkillSwap solves this by matching users based on complementary skill sets.
+
+---
+
+## Solution
+
+Every user maintains two skill lists:
+
+- **Skills I Can Teach**
+- **Skills I Want to Learn**
+
+The matching system compares these lists between users.
+
+If:
+
+- User A can teach something User B wants
+- User B can teach something User A wants
+
+then they form a strong two-way match.
+
+Users can then:
+
+1. View the matched profile
+2. Select the skills involved in the exchange
+3. Send a swap request
+4. Accept or reject the request
+5. Complete the swap
+6. Leave a rating and review
+
+---
+
+## Example
+
+### Person A
+
+**Teaches**
+
+- React
+- JavaScript
+- MongoDB
+
+**Wants to Learn**
+
+- Docker
+- AWS
+
+### Person B
+
+**Teaches**
+
+- Docker
+- AWS
+- Kubernetes
+
+**Wants to Learn**
+
 - React
 - JavaScript
 
-Wants to Learn:
-- Docker
-- AWS
-```
+SkillSwap detects:
 
-**User B**
+- Docker and AWS → skills Person A wants
+- React and JavaScript → skills Person B wants
 
-```text
-Can Teach:
-- Docker
-- AWS
+This creates a:
 
-Wants to Learn:
-- React
-- JavaScript
-```
+**2-way match**
 
-SkillSwap identifies that these users have complementary skills and gives them a strong two-way match.
+with a high match score.
 
-The platform then allows them to initiate a skill exchange through a swap request.
+Person A can send a request such as:
+
+> "I'll teach you React if you teach me Docker."
+
+Person B can accept the request and the exchange moves through the swap lifecycle.
 
 ---
 
-# 🎯 Problem Statement
-
-Finding the right person to learn a specific skill from can be difficult.
-
-A user may:
-
-- Know a valuable skill
-- Want to learn another skill
-- Have no suitable person in their existing network
-- Not want to pay for a course or private tutor
-- Need a partner with compatible availability and experience
-
-SkillSwap solves this by creating a structured platform where users can:
-
-1. List what they can teach
-2. List what they want to learn
-3. Discover other users
-4. Find compatible skill matches
-5. Send exchange requests
-6. Complete skill exchanges
-7. Build reputation through reviews
-
----
-
-# 🔄 How SkillSwap Works
-
-```text
-                    ┌─────────────────┐
-                    │ Create Account  │
-                    └────────┬────────┘
-                             ↓
-                    ┌─────────────────┐
-                    │ Build Profile   │
-                    └────────┬────────┘
-                             ↓
-                    ┌─────────────────┐
-                    │ Add Skills      │
-                    │ I Can Teach     │
-                    │ I Want To Learn │
-                    └────────┬────────┘
-                             ↓
-                    ┌─────────────────┐
-                    │ Discover Users  │
-                    └────────┬────────┘
-                             ↓
-                    ┌─────────────────┐
-                    │ Find Matches    │
-                    └────────┬────────┘
-                             ↓
-                    ┌─────────────────┐
-                    │ Send Request    │
-                    └────────┬────────┘
-                             ↓
-                    ┌─────────────────┐
-                    │ Accept / Reject │
-                    └────────┬────────┘
-                             ↓
-                    ┌─────────────────┐
-                    │ Active Swap     │
-                    └────────┬────────┘
-                             ↓
-                    ┌─────────────────┐
-                    │ Complete Swap   │
-                    └────────┬────────┘
-                             ↓
-                    ┌─────────────────┐
-                    │ Review & Rating │
-                    └─────────────────┘
-```
-
----
-
-# ✨ Features
-
-## 🔐 Authentication & Authorization
-
-SkillSwap provides a complete authentication system.
+## Key Features
 
 ### Authentication
 
 - User registration
 - User login
 - JWT-based authentication
-- Password hashing using bcrypt
-- Secure logout
-- Session persistence
+- Password hashing with bcrypt
 - Protected frontend routes
+- Protected backend routes
+- Session restoration
+- Secure logout flow
 
-### Authorization
+### User Profiles
 
-Authenticated users are also checked for permission before performing protected actions.
-
-For example:
-
-```text
-Authentication
-     ↓
-Who is the user?
-
-Authorization
-     ↓
-Is this user allowed to perform this action?
-```
-
-Users cannot modify or delete another user's account.
-
----
-
-# 👤 User Profiles
-
-Each user has a profile containing information used for discovery and matching.
-
-Profile information includes:
+Users can manage:
 
 - Name
-- Email
 - Bio
 - Location
+- Profile avatar
 - Experience level
 - Availability
-- Profile picture
 - Skills they can teach
 - Skills they want to learn
-- Rating
-- Number of reviews
+- Ratings
 - Completed swaps
 
-Users can update their profile as their skills and learning goals change.
+Users can also:
 
----
+- Change their password
+- Delete their account
 
-# 🖼️ Profile Image Uploads
+Account deletion performs server-side cleanup of associated data.
 
-Profile images are handled using:
+### Skill Management
 
-```text
-React
-  ↓
-Multipart Form Data
-  ↓
-Multer
-  ↓
-Express Backend
-  ↓
-Cloudinary
-  ↓
-Secure Image URL
-  ↓
-MongoDB
-```
+The My Skills page allows users to:
 
-Multer uses memory storage rather than permanently storing uploaded images on the backend server.
+- Add skills they can teach
+- Add skills they want to learn
+- Select skills from the skill catalog
+- Create a new skill when necessary
+- Remove skills
+- Prevent duplicate skills
+- Save changes directly to the database
 
-Cloudinary is used as the production image-storage and delivery service.
+### Skill Matching
 
-### Upload Validation
+SkillSwap uses a deterministic matching algorithm.
 
-The backend validates:
+The algorithm:
 
-- File type
-- File extension
-- File size
+- Compares the current user's desired skills with another user's teaching skills
+- Compares the other user's desired skills with the current user's teaching skills
+- Calculates a match score
+- Identifies one-way and two-way matches
+- Sorts candidates by match score
 
-Supported image formats include:
+This makes the recommendation system explainable and predictable.
 
-```text
-JPEG
-PNG
-WebP
-GIF
-```
+### Discover
 
-Maximum avatar size:
+Users can discover other users using:
 
-```text
-2 MB
-```
-
----
-
-# 🧠 Skill Matching System
-
-The matching system is one of the core features of SkillSwap.
-
-The system compares the skills between two users to determine how useful the potential exchange could be.
-
-For a logged-in user `A` and candidate user `B`:
-
-### Step 1 — What can I learn from them?
-
-```text
-A.skillsToLearn
-        ∩
-B.skillsToTeach
-```
-
-This identifies skills that User A wants to learn and User B can teach.
-
-### Step 2 — What can they learn from me?
-
-```text
-B.skillsToLearn
-        ∩
-A.skillsToTeach
-```
-
-This identifies skills that User B wants to learn and User A can teach.
-
-### Step 3 — Determine Match Type
-
-```text
-Both directions have matches
-            ↓
-       2-Way Match
-```
-
-If only one direction matches:
-
-```text
-One direction has a match
-            ↓
-       1-Way Match
-```
-
----
-
-## Example
-
-### User A
-
-```text
-Teaches:
-React
-JavaScript
-
-Wants:
-Docker
-AWS
-```
-
-### User B
-
-```text
-Teaches:
-Docker
-AWS
-
-Wants:
-React
-JavaScript
-```
-
-The system calculates:
-
-```text
-A wants to learn from B:
-Docker
-AWS
-
-B wants to learn from A:
-React
-JavaScript
-```
-
-Therefore:
-
-```text
-2-Way Match
-```
-
-This is considered a strong skill exchange because both users can teach something the other person wants to learn.
-
----
-
-# 🔎 Discover System
-
-The Discover page allows users to find potential skill partners.
-
-Users can search or filter based on information such as:
-
-- Name
-- Skills
+- Name search
+- Skill search
 - Skill category
 - Experience level
 - Availability
 
-The matching system helps prioritize users whose teaching and learning goals are compatible.
+The Discover page periodically refreshes match data so users can see recent changes without manually refreshing the browser.
 
-The Discover page periodically refreshes data so newly created or updated profiles can become visible without manually refreshing the browser.
+### Swap Requests
 
----
+Users can send skill exchange requests containing:
 
-# 🔄 Swap Requests
-
-Once a user finds a suitable partner, they can send a SkillSwap request.
-
-A request contains:
-
-- Sender
 - Receiver
-- Skill offered
-- Skill requested
+- Skill they want to learn
+- Skill they can teach
 - Optional message
-- Request status
-- Completion state
 
-Before creating a request, the backend validates important conditions such as:
+The system validates that:
 
-- Receiver exists
-- Sender is not requesting themselves
-- Offered skill belongs to the sender
-- Requested skill belongs to the receiver
-- Duplicate pending requests are prevented
+- The sender exists
+- The receiver exists
+- The sender is not requesting themselves
+- The offered skill belongs to the sender
+- The requested skill belongs to the receiver
+- A duplicate pending request does not already exist
 
----
+### Swap Management
 
-# 🔁 Swap Request Lifecycle
+Users can:
 
-A swap request follows a controlled lifecycle:
+- View incoming requests
+- View sent requests
+- Accept requests
+- Reject requests
+- Cancel eligible requests
+- Mark their side of a swap as complete
+- View active swaps
+- View completed swaps
+- Leave reviews
 
-```text
-                 ┌──────────┐
-                 │ Pending  │
-                 └────┬─────┘
-                      │
-              ┌───────┴───────┐
-              ↓               ↓
-        ┌──────────┐    ┌──────────┐
-        │ Accepted │    │ Rejected │
-        └────┬─────┘    └──────────┘
-             │
-             ↓
-       ┌────────────┐
-       │ Active Swap│
-       └──────┬─────┘
-              │
-              ↓
-       ┌────────────┐
-       │ Completed  │
-       └────────────┘
+### Two-Sided Completion
 
-Pending
-   ↓
-Cancelled
-```
+A swap does not become completed when only one person marks it complete.
 
-Both participants must mark their side as completed before the swap reaches the final `Completed` state.
-
----
-
-# ⭐ Reviews & Ratings
-
-After a completed skill exchange, participants can review each other.
-
-Each review contains:
-
-- Reviewer
-- Reviewed user
-- Related swap request
-- Rating
-- Comment
-
-Ratings use a:
+Instead:
 
 ```text
-1 → 5 star scale
+Sender completes
+       +
+Receiver completes
+       ↓
+Swap becomes Completed
 ```
 
-The system prevents users from repeatedly reviewing the same swap.
+### Reviews and Ratings
 
-User profiles display reputation information such as:
+After a swap is completed, participants can:
 
-- Average rating
-- Review count
-- Completed swaps
+- Give a rating from 1–5
+- Add a written review
 
-This provides future users with additional context when choosing a skill partner.
+The system prevents duplicate reviews from the same participant for the same swap.
 
----
+The reviewed user's average rating is updated automatically.
 
-# 📊 Dashboard
+### Avatar Uploads
 
-The dashboard provides an overview of a user's activity.
+Profile avatars support:
 
-It can show information such as:
+- JPEG
+- PNG
+- WebP
+- GIF
 
-- Skills I teach
-- Skills I want to learn
-- Pending requests
+Maximum upload size:
+
+**2 MB**
+
+Images are uploaded to **Cloudinary** rather than being stored permanently on the application server.
+
+The database stores the secure Cloudinary URL.
+
+### Dashboard
+
+The dashboard provides:
+
+- Skills the user teaches
+- Skills the user wants to learn
+- Pending incoming swaps
+- Pending sent swaps
 - Active swaps
 - Completed swaps
-- Recommended partners
+- Recommended users
 - Recent activity
 
-This gives users a central place to monitor their SkillSwap activity.
+### Account Deletion
 
----
+Users can permanently delete their account through a custom confirmation dialog.
 
-# ⚡ Automatic Data Refresh
-
-SkillSwap uses lightweight polling for pages where changes from other users should appear automatically.
-
-Instead of introducing WebSockets, selected pages periodically request updated data from the backend.
-
-Conceptually:
+The deletion flow:
 
 ```text
-React Page
-    ↓
-Wait
-    ↓
-GET latest data
-    ↓
-Update React state
-    ↓
-Wait
-    ↓
-Repeat
+Confirm deletion
+       ↓
+Delete related swap requests
+       ↓
+Delete related reviews
+       ↓
+Delete Cloudinary avatar
+       ↓
+Delete user account
+       ↓
+Logout
+       ↓
+Return to landing page
 ```
 
-Polling intervals are kept lightweight and are only used where automatic updates are useful.
+Deleted credentials cannot be used to log in again.
 
-### Why Polling?
+If the same email is later registered again, it creates a completely new account.
 
-SkillSwap does not currently require high-frequency real-time communication.
+### Responsive UI
 
-Polling keeps the implementation:
-
-- Simple
-- Stateless
-- Easy to deploy
-- Easy to understand
-- Easy to maintain
-
-If the platform later introduces real-time chat or instant notifications, WebSockets could be introduced.
-
----
-
-# 📱 Responsive Design
-
-The application is designed to work across:
+The application is designed for:
 
 - Desktop
 - Tablet
 - Mobile
 
-The UI includes:
+The interface includes:
 
-- Responsive layouts
 - Loading states
 - Empty states
 - Error states
-- Form validation feedback
-- Mobile-friendly navigation
-- Protected route handling
+- Responsive navigation
+- Responsive cards
+- Mobile-friendly forms
+- Responsive modals
 
 ---
 
-# 🛠️ Tech Stack
+## User Workflow
 
-## Frontend
+### 1. Register
+
+The user creates an account with:
+
+- Name
+- Email
+- Password
+
+### 2. Complete Profile
+
+The user adds:
+
+- Bio
+- Location
+- Experience
+- Availability
+- Avatar
+
+### 3. Add Skills
+
+The user chooses:
+
+- Skills they can teach
+- Skills they want to learn
+
+### 4. Discover People
+
+The user browses recommended skill partners.
+
+### 5. Check Match
+
+The matching system shows:
+
+- Match score
+- Match strength
+- Skills the user can learn
+- Skills the other person can learn
+
+### 6. Send Swap Request
+
+The user selects:
+
+- Skill they want to learn
+- Skill they can teach
+- Optional message
+
+### 7. Accept or Reject
+
+The receiver can:
+
+- Accept
+- Reject
+
+Only the receiver has permission to accept or reject an incoming request.
+
+### 8. Complete the Exchange
+
+Both participants independently mark their side as complete.
+
+### 9. Leave a Review
+
+After both participants complete the exchange, they can review each other.
+
+---
+
+## Matching System
+
+The matching algorithm is implemented in:
+
+```text
+server/src/utils/match.js
+```
+
+It is used by the matching and dashboard functionality.
+
+For the logged-in user `U` and candidate user `C`:
+
+### Step 1 — Find What U Can Learn
+
+```text
+U wants ∩ C teaches
+```
+
+This represents skills that the current user wants to learn and the candidate can teach.
+
+### Step 2 — Find What C Can Learn
+
+```text
+C wants ∩ U teaches
+```
+
+This represents skills that the candidate wants to learn and the current user can teach.
+
+### Step 3 — Ignore Non-Matches
+
+If there is no overlap in either direction:
+
+```text
+a + b = 0
+```
+
+the candidate is not considered a match.
+
+### Step 4 — Determine Match Strength
+
+If both directions have an overlap:
+
+```text
+2-way match
+```
+
+Otherwise:
+
+```text
+1-way match
+```
+
+### Step 5 — Calculate Score
+
+The score is calculated as:
+
+```text
+score =
+round(
+  (a + b) /
+  (|U.wants| + |C.wants|)
+  × 100
+)
+```
+
+The score is capped at 100.
+
+### Example
+
+User A:
+
+```text
+Wants:   Docker, AWS
+Teaches: React, JavaScript, MongoDB
+```
+
+User B:
+
+```text
+Wants:   React, JavaScript
+Teaches: Docker, AWS, Kubernetes
+```
+
+The intersections are:
+
+```text
+A can learn from B:
+Docker, AWS
+= 2
+
+B can learn from A:
+React, JavaScript
+= 2
+```
+
+Therefore:
+
+```text
+score = (2 + 2) / (2 + 2) × 100
+      = 100
+```
+
+Result:
+
+```text
+100% — 2-way match
+```
+
+### Why a Deterministic Algorithm?
+
+No AI or machine learning is required for the core matching problem.
+
+The matching rule is:
+
+> A good skill exchange exists when both users can teach something the other person wants to learn.
+
+This approach is:
+
+- Easy to understand
+- Easy to test
+- Deterministic
+- Explainable in an interview
+- Fast enough for the project's current scale
+- Free from training-data requirements
+
+---
+
+## Swap Request Lifecycle
+
+A swap request follows this lifecycle:
+
+```text
+Pending
+   │
+   ├── Accept ──→ Accepted
+   │                 │
+   │                 ├── Both complete ──→ Completed
+   │                 │
+   │                 └── One complete ──→ Still Active
+   │
+   └── Reject ──→ Rejected
+```
+
+A pending request can also be cancelled by the appropriate participant.
+
+### Important Authorization Rules
+
+- Only the receiver can accept a request.
+- Only the receiver can reject a request.
+- Either participant can cancel an eligible request.
+- Each participant can mark only their own completion flag.
+- A participant cannot mark their side complete twice.
+- A review is allowed only after completion.
+- A participant can review a swap only once.
+
+---
+
+## Tech Stack
 
 | Technology | Purpose |
 |---|---|
-| React | User interface |
-| Vite | Frontend build tool |
+| React 18 | Frontend UI |
+| Vite | Frontend development and build tooling |
 | React Router | Client-side routing |
-| Tailwind CSS | UI styling |
-| Axios | HTTP/API communication |
-| JavaScript ES6+ | Application logic |
-
-## Backend
-
-| Technology | Purpose |
-|---|---|
-| Node.js | JavaScript runtime |
-| Express.js | REST API framework |
+| Tailwind CSS | Styling and responsive UI |
+| Axios | HTTP requests and JWT interceptor |
+| Node.js | Backend runtime |
+| Express.js | REST API |
 | MongoDB | Database |
-| Mongoose | MongoDB ODM |
-| JWT | Authentication |
+| Mongoose | MongoDB ODM and schema validation |
 | bcryptjs | Password hashing |
-| express-validator | Request validation |
-| Multer | Multipart file handling |
-| Cloudinary | Image storage and delivery |
-
-## Deployment
-
-| Service | Purpose |
-|---|---|
-| Vercel | Frontend hosting |
-| Render | Backend hosting |
-| MongoDB Atlas | Cloud database |
-| Cloudinary | Profile image storage |
+| JSON Web Token | Authentication |
+| express-validator | API input validation |
+| Multer | Multipart image upload handling |
+| Cloudinary | Production avatar image storage |
+| Docker | Containerization |
+| Docker Compose | Local multi-container development |
+| Vercel | Frontend deployment |
+| Render | Backend deployment |
 
 ---
 
-# 🏗️ System Architecture
+## System Architecture
 
 ```text
-                         USER
-                          │
-                          ▼
-                ┌───────────────────┐
-                │ React + Vite      │
-                │                   │
-                │ Pages             │
-                │ Components        │
-                │ Context           │
-                │ Hooks             │
-                │ Services          │
-                └─────────┬─────────┘
-                          │
-                     Axios + JWT
-                          │
-                          ▼
-                ┌───────────────────┐
-                │ Express REST API  │
-                │                   │
-                │ Routes            │
-                │ Middleware        │
-                │ Controllers       │
-                │ Validation        │
-                └─────────┬─────────┘
-                          │
-                    Mongoose ODM
-                          │
-                          ▼
-                ┌───────────────────┐
-                │ MongoDB Atlas     │
-                │                   │
-                │ Users             │
-                │ Skills            │
-                │ Swap Requests     │
-                │ Reviews           │
-                └───────────────────┘
+                    ┌─────────────────────┐
+                    │       React         │
+                    │      Vite SPA       │
+                    └──────────┬──────────┘
+                               │
+                               │ Axios
+                               │ Bearer JWT
+                               ▼
+                    ┌─────────────────────┐
+                    │    Express API      │
+                    │    /api/...         │
+                    └──────────┬──────────┘
+                               │
+                 ┌─────────────┼─────────────┐
+                 │             │             │
+                 ▼             ▼             ▼
+             Middleware     Routes       Controllers
+                 │                           │
+                 │                           ▼
+                 │                       Mongoose
+                 │                           │
+                 └──────────────┬────────────┘
+                                ▼
+                         ┌──────────────┐
+                         │   MongoDB    │
+                         └──────────────┘
 
-                          │
-                          │ Image Upload
-                          ▼
-                ┌───────────────────┐
-                │ Cloudinary        │
-                │                   │
-                │ Profile Images    │
-                └───────────────────┘
+                         Avatar Upload
+                              │
+                              ▼
+                         ┌──────────────┐
+                         │  Cloudinary  │
+                         └──────────────┘
 ```
 
 ---
 
-# 🔐 Authentication Flow
+## Request-Response Flow
 
-A typical authenticated request works like this:
+Example: sending a swap request.
+
+### 1. User Action
+
+The user clicks:
 
 ```text
-User logs in
-     ↓
-POST /api/auth/login
-     ↓
-Backend validates credentials
-     ↓
-Password checked using bcrypt
-     ↓
-JWT generated
-     ↓
-Frontend stores authentication state
-     ↓
-User accesses protected page
-     ↓
-JWT sent with API request
-     ↓
-Authentication middleware verifies JWT
-     ↓
-Request reaches controller
+Swap Skills
 ```
 
-The backend does not trust the frontend alone for authorization.
+### 2. Frontend
 
-Protected operations are validated again on the server.
+React opens the swap request form.
+
+The user selects:
+
+```text
+I want to learn → Docker
+I can teach → React
+```
+
+### 3. API Request
+
+The frontend sends:
+
+```http
+POST /api/swaps
+Authorization: Bearer <JWT>
+```
+
+with the selected skill IDs.
+
+### 4. Authentication
+
+The backend verifies the JWT.
+
+### 5. Validation
+
+The request is checked using:
+
+- Authentication middleware
+- Input validation
+- Controller-level business rules
+
+### 6. Business Logic
+
+The controller verifies:
+
+- Receiver exists
+- Sender is not the receiver
+- Sender teaches the offered skill
+- Receiver teaches the requested skill
+- Duplicate pending request does not exist
+
+### 7. Database
+
+A new `SwapRequest` document is created.
+
+### 8. Response
+
+The API returns the created swap.
+
+### 9. Frontend
+
+React updates the UI with the new request.
 
 ---
 
-# 🗄️ Database Design
+## Database Design
 
-SkillSwap uses MongoDB with Mongoose models.
+SkillSwap currently uses four primary MongoDB collections.
 
-## User
-
-Stores user identity and profile information.
+### User
 
 ```text
 User
@@ -706,13 +742,12 @@ User
 ├── skillsToTeach[]
 ├── skillsToLearn[]
 ├── rating
-├── ratingCount
-└── ...
+└── ratingCount
 ```
 
-## Skill
+Passwords are excluded from normal queries and stored using bcrypt hashing.
 
-Stores reusable skill information.
+### Skill
 
 ```text
 Skill
@@ -720,9 +755,23 @@ Skill
 └── category
 ```
 
-## SwapRequest
+Skill names are unique.
 
-Represents a skill exchange request between two users.
+Example categories include:
+
+```text
+Frontend
+Backend
+Database
+Cloud
+DevOps
+Programming
+Design
+Marketing
+Other
+```
+
+### SwapRequest
 
 ```text
 SwapRequest
@@ -736,7 +785,7 @@ SwapRequest
 └── receiverCompleted
 ```
 
-Possible request states include:
+Possible statuses:
 
 ```text
 Pending
@@ -746,9 +795,9 @@ Completed
 Cancelled
 ```
 
-## Review
+Completion is two-sided.
 
-Stores feedback after a completed exchange.
+### Review
 
 ```text
 Review
@@ -759,186 +808,314 @@ Review
 └── comment
 ```
 
----
-
-# 🔒 Authentication & Security
-
-Security is implemented at both frontend and backend levels.
-
-## Authentication
-
-- JWT-based authentication
-- Password hashing using bcrypt
-- Protected routes
-- Token verification middleware
-- Secure logout flow
-
-## Authorization
-
-- Ownership checks
-- User-specific operations
-- Protected account operations
-- Swap participant validation
-- Review authorization
-
-## Input Validation
-
-The backend validates incoming data before processing it.
-
-Validation covers areas such as:
-
-- User information
-- Skill IDs
-- Swap requests
-- Review data
-- Uploaded images
-
-## File Security
-
-Avatar uploads are restricted by:
-
-```text
-Allowed MIME types
-        +
-Allowed extensions
-        +
-2 MB size limit
-```
-
-## Environment Variables
-
-Sensitive values are kept outside the repository.
-
-Examples:
-
-```text
-MONGO_URI
-JWT_SECRET
-CLOUDINARY_API_KEY
-CLOUDINARY_API_SECRET
-```
-
-These values are never committed to Git.
+A compound unique constraint prevents the same participant from reviewing the same swap more than once.
 
 ---
 
-# 🔌 API Overview
+## Why There Is No Separate Swap Collection
 
-The backend exposes REST APIs consumed by the React frontend.
+The project intentionally keeps the database model simple.
 
-## Authentication
+An accepted `SwapRequest` already contains:
 
-```text
-POST   /api/auth/register
-POST   /api/auth/login
-```
+- Sender
+- Receiver
+- Offered skill
+- Requested skill
+- Completion state
+- Status
 
-Used for account creation and authentication.
+Therefore, another `Swap` collection would duplicate information unnecessarily.
 
-## Users
-
-```text
-GET    /api/users
-GET    /api/users/:id
-PUT    /api/users/:id
-DELETE /api/users/:id
-```
-
-Used for user profiles and account operations.
-
-## Skills
+Similarly, a separate `UserSkills` join collection is not required because MongoDB can store the skill references directly in:
 
 ```text
-GET    /api/skills
-POST   /api/skills
+skillsToTeach[]
+skillsToLearn[]
 ```
 
-Used for retrieving and managing available skills where applicable.
-
-## Swap Requests
-
-```text
-GET    /api/swaps
-POST   /api/swaps
-PUT    /api/swaps/:id
-DELETE /api/swaps/:id
-```
-
-Used for creating and managing skill exchange requests.
-
-## Reviews
-
-```text
-POST   /api/reviews
-GET    /api/reviews/:userId
-```
-
-Used for submitting and retrieving user reviews.
-
-> The exact routes, validation rules and request payloads are defined in the backend source code.
+This keeps the architecture easier to understand while remaining appropriate for the current scale.
 
 ---
 
-# 📁 Project Structure
+## Authentication and Security
+
+### Authentication Flow
+
+```text
+Register / Login
+       ↓
+Validate credentials
+       ↓
+Hash / compare password
+       ↓
+Create JWT
+       ↓
+Store token on client
+       ↓
+Send Bearer token with API requests
+       ↓
+Backend verifies JWT
+       ↓
+Protected route continues
+```
+
+### Password Security
+
+Passwords are:
+
+- Never stored as plain text
+- Hashed using bcrypt
+- Excluded from normal user queries
+
+### JWT
+
+The JWT contains the user's ID.
+
+Example payload:
+
+```json
+{
+  "id": "user_id"
+}
+```
+
+The token has an expiration period configured through:
+
+```env
+JWT_EXPIRE=7d
+```
+
+### Protected API Routes
+
+The backend uses authentication middleware to verify the token.
+
+Invalid or missing tokens return:
+
+```http
+401 Unauthorized
+```
+
+### Authorization
+
+Authentication answers:
+
+> Who are you?
+
+Authorization answers:
+
+> Are you allowed to perform this action?
+
+For example:
+
+```text
+PUT /api/users/:id
+```
+
+is allowed only when the authenticated user's ID matches the requested user ID.
+
+Swap actions also check whether the authenticated user is the sender or receiver before allowing the operation.
+
+---
+
+## API Overview
+
+Base URL for local development:
+
+```text
+http://localhost:5000/api
+```
+
+All protected endpoints require:
+
+```http
+Authorization: Bearer <token>
+```
+
+### Authentication
+
+| Method | Endpoint | Purpose | Auth |
+|---|---|---|---|
+| POST | `/api/auth/register` | Create account | No |
+| POST | `/api/auth/login` | Login | No |
+| GET | `/api/auth/me` | Restore current session | Yes |
+
+### Users
+
+| Method | Endpoint | Purpose | Auth |
+|---|---|---|---|
+| GET | `/api/users` | Browse users | Yes |
+| GET | `/api/users/:id` | View public profile | Yes |
+| PUT | `/api/users/:id` | Update profile | Yes |
+| PUT | `/api/users/:id/password` | Change password | Yes |
+| DELETE | `/api/users/:id` | Delete account | Yes |
+
+### Skills
+
+| Method | Endpoint | Purpose | Auth |
+|---|---|---|---|
+| GET | `/api/skills` | Get skill catalog | Yes |
+| POST | `/api/skills` | Create a skill | Yes |
+
+### Matches
+
+| Method | Endpoint | Purpose | Auth |
+|---|---|---|---|
+| GET | `/api/matches` | Get ranked skill matches | Yes |
+
+Optional query:
+
+```text
+/api/matches?limit=20
+```
+
+### Swap Requests
+
+| Method | Endpoint | Purpose | Auth |
+|---|---|---|---|
+| GET | `/api/swaps` | Get current user's swaps | Yes |
+| POST | `/api/swaps` | Send swap request | Yes |
+| PUT | `/api/swaps/:id` | Update swap status | Yes |
+| DELETE | `/api/swaps/:id` | Delete eligible request | Yes |
+
+### Reviews
+
+| Method | Endpoint | Purpose | Auth |
+|---|---|---|---|
+| POST | `/api/reviews` | Create review | Yes |
+| GET | `/api/reviews/user/:userId` | Get user's reviews | Yes |
+
+### Dashboard
+
+| Method | Endpoint | Purpose | Auth |
+|---|---|---|---|
+| GET | `/api/dashboard` | Get dashboard data | Yes |
+
+---
+
+## Project Structure
 
 ```text
 skillswap/
 │
-├── client/
-│   ├── public/
-│   │
-│   ├── src/
-│   │   ├── components/
-│   │   ├── context/
-│   │   ├── hooks/
-│   │   ├── pages/
-│   │   ├── services/
-│   │   ├── utils/
-│   │   ├── App.jsx
-│   │   └── main.jsx
-│   │
-│   ├── .env.example
-│   ├── vercel.json
-│   ├── package.json
-│   └── vite.config.js
-│
-├── server/
-│   ├── src/
-│   │   ├── config/
-│   │   ├── controllers/
-│   │   ├── middleware/
-│   │   ├── models/
-│   │   ├── routes/
-│   │   ├── tests/
-│   │   ├── utils/
-│   │   └── server.js
-│   │
-│   ├── .env.example
-│   └── package.json
-│
+├── README.md
 ├── .env.example
 ├── .gitignore
 ├── docker-compose.yml
-└── README.md
+│
+├── server/
+│   ├── package.json
+│   ├── Dockerfile
+│   ├── .dockerignore
+│   │
+│   └── src/
+│       ├── server.js
+│       │
+│       ├── config/
+│       │   └── db.js
+│       │
+│       ├── models/
+│       │   ├── User.js
+│       │   ├── Skill.js
+│       │   ├── SwapRequest.js
+│       │   └── Review.js
+│       │
+│       ├── middleware/
+│       │   ├── auth.js
+│       │   └── upload.js
+│       │
+│       ├── routes/
+│       │   ├── auth.js
+│       │   ├── users.js
+│       │   ├── skills.js
+│       │   ├── swaps.js
+│       │   ├── reviews.js
+│       │   ├── matches.js
+│       │   └── dashboard.js
+│       │
+│       ├── controllers/
+│       │   ├── authController.js
+│       │   ├── userController.js
+│       │   ├── skillController.js
+│       │   ├── swapController.js
+│       │   ├── reviewController.js
+│       │   ├── matchController.js
+│       │   └── dashboardController.js
+│       │
+│       ├── utils/
+│       │   ├── match.js
+│       │   ├── helpers.js
+│       │   └── seed.js
+│       │
+│       └── tests/
+│
+└── client/
+    ├── package.json
+    ├── Dockerfile
+    ├── .dockerignore
+    ├── .env.example
+    ├── nginx.conf
+    ├── vercel.json
+    │
+    └── src/
+        ├── main.jsx
+        ├── App.jsx
+        ├── index.css
+        │
+        ├── context/
+        │   └── AuthContext.jsx
+        │
+        ├── services/
+        │   └── api.js
+        │
+        ├── hooks/
+        │   └── useSwapRequest.js
+        │
+        ├── utils/
+        │
+        ├── components/
+        │   ├── Navbar
+        │   ├── Layout
+        │   ├── ProtectedRoute
+        │   ├── UserCard
+        │   ├── SkillTag
+        │   ├── StatCard
+        │   ├── EmptyState
+        │   ├── Loader
+        │   ├── Stars
+        │   ├── Modal
+        │   ├── SwapRequestForm
+        │   ├── ReviewForm
+        │   ├── SkillPicker
+        │   └── Avatar
+        │
+        └── pages/
+            ├── Landing
+            ├── Login
+            ├── Register
+            ├── Dashboard
+            ├── Discover
+            ├── MySkills
+            ├── UserProfile
+            ├── Profile
+            └── Swaps
 ```
 
 ---
 
-# 💻 Getting Started
+## Getting Started
 
-## Prerequisites
+### Requirements
 
-Make sure the following are installed:
+Install:
 
 - Node.js 18+
-- npm
+- MongoDB
 - Git
-- MongoDB or MongoDB Atlas account
-- Cloudinary account for avatar uploads
 
----
+Alternatively, MongoDB can be run through Docker.
 
-## 1. Clone the Repository
+### Clone the Repository
 
 ```bash
 git clone https://github.com/srijan2312/SkillSwap-Peer-to-Peer-Skill-Exchange-Platform.git
@@ -946,49 +1123,16 @@ git clone https://github.com/srijan2312/SkillSwap-Peer-to-Peer-Skill-Exchange-Pl
 cd SkillSwap-Peer-to-Peer-Skill-Exchange-Platform
 ```
 
----
-
-## 2. Install Backend Dependencies
+### Install Backend Dependencies
 
 ```bash
 cd server
 npm install
 ```
 
----
+### Install Frontend Dependencies
 
-## 3. Configure Backend Environment Variables
-
-Create:
-
-```text
-server/.env
-```
-
-Add:
-
-```env
-PORT=5000
-
-MONGO_URI=your_mongodb_connection_string
-
-JWT_SECRET=your_long_random_secret
-JWT_EXPIRE=7d
-
-CLIENT_URL=http://localhost:5173
-
-CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_api_secret
-```
-
-Do not commit this file.
-
----
-
-## 4. Install Frontend Dependencies
-
-Open a second terminal:
+Open another terminal:
 
 ```bash
 cd client
@@ -997,7 +1141,34 @@ npm install
 
 ---
 
-## 5. Configure Frontend Environment Variables
+## Environment Variables
+
+### Backend
+
+Create:
+
+```text
+server/.env
+```
+
+Example:
+
+```env
+PORT=5000
+
+MONGO_URI=mongodb://127.0.0.1:27017/skillswap
+
+JWT_SECRET=your-long-random-secret
+JWT_EXPIRE=7d
+
+CLIENT_URL=http://localhost:5173
+
+CLOUDINARY_CLOUD_NAME=your-cloudinary-cloud-name
+CLOUDINARY_API_KEY=your-cloudinary-api-key
+CLOUDINARY_API_SECRET=your-cloudinary-api-secret
+```
+
+### Frontend
 
 Create:
 
@@ -1005,22 +1176,32 @@ Create:
 client/.env
 ```
 
-Add:
+Example:
 
 ```env
 VITE_API_URL=http://localhost:5000/api
 ```
 
+Never commit real `.env` files.
+
+They are excluded through `.gitignore`.
+
 ---
 
-# ▶️ Running the Application
+## Running the Application
 
-## Start Backend
+### Start Backend
 
 From the `server` directory:
 
 ```bash
 npm run dev
+```
+
+or:
+
+```bash
+npm start
 ```
 
 Backend:
@@ -1029,9 +1210,7 @@ Backend:
 http://localhost:5000
 ```
 
----
-
-## Start Frontend
+### Start Frontend
 
 From the `client` directory:
 
@@ -1045,21 +1224,53 @@ Frontend:
 http://localhost:5173
 ```
 
-Open the frontend URL in your browser.
+The complete local flow is:
+
+```text
+Browser
+   ↓
+React / Vite
+   ↓
+Express API
+   ↓
+MongoDB
+```
+
+Avatar uploads additionally use:
+
+```text
+React
+   ↓
+Express + Multer
+   ↓
+Cloudinary
+   ↓
+Secure image URL
+   ↓
+MongoDB User document
+```
 
 ---
 
-# 🐳 Docker
+## Docker
 
-The project includes Docker Compose configuration.
+The project includes Docker configuration for running the application with containers.
 
-Build and start the application:
+Start the stack:
 
 ```bash
 docker compose up --build
 ```
 
-To stop the containers:
+Typical local services:
+
+```text
+Frontend → http://localhost
+Backend  → http://localhost:5000
+MongoDB  → MongoDB container
+```
+
+Stop the stack:
 
 ```bash
 docker compose down
@@ -1067,320 +1278,519 @@ docker compose down
 
 ---
 
-# 🧪 Testing
+## Data Refresh Strategy
 
-The backend contains tests for important application workflows and edge cases.
+SkillSwap does not use WebSockets or Socket.IO.
 
-Testing areas include:
+Instead, selected pages use lightweight polling.
 
-- Authentication
-- User operations
-- Swap request operations
-- Validation
-- Reviews
-- Application workflows
+Current approach:
 
-Run the available backend tests from:
+```text
+Dashboard
+    ↓
+Periodic API refresh
 
-```bash
-cd server
+User Profile
+    ↓
+Periodic API refresh
+
+My Swaps
+    ↓
+More frequent API refresh
+
+Discover
+    ↓
+Periodic match refresh
 ```
 
-Then use the test command defined in `server/package.json`.
+The project intentionally uses polling because the application does not require high-frequency real-time communication.
+
+This keeps the architecture:
+
+- Simple
+- Stateless
+- Easy to debug
+- Easy to deploy
+- Easy to explain
+
+### Why Not WebSockets?
+
+WebSockets would be useful for features such as:
+
+- Instant chat
+- Typing indicators
+- Real-time notifications
+- Live presence
+
+Those features are outside the current scope of SkillSwap.
+
+Polling is sufficient for the current application.
 
 ---
 
-# ☁️ Deployment
+## Testing
 
-The production architecture uses separate services for each responsibility.
+The backend includes test-related files for validating:
 
-```text
-┌─────────────────────────┐
-│         Vercel          │
-│                         │
-│     React Frontend      │
-└────────────┬────────────┘
-             │
-             │ HTTPS API
-             ▼
-┌─────────────────────────┐
-│         Render          │
-│                         │
-│    Express Backend      │
-└───────┬─────────┬───────┘
-        │         │
-        ▼         ▼
-┌────────────┐ ┌─────────────┐
-│ MongoDB    │ │ Cloudinary  │
-│   Atlas    │ │             │
-│            │ │ Avatar      │
-│ Database   │ │ Storage     │
-└────────────┘ └─────────────┘
-```
+- Authentication
+- API behavior
+- Edge cases
+- Swap workflows
+- Account operations
+
+Important scenarios include:
+
+### Authentication
+
+- Valid registration
+- Duplicate email
+- Valid login
+- Invalid password
+- Protected routes
+- Invalid JWT
+
+### User Operations
+
+- Update own profile
+- Block updates to another user's profile
+- Change password
+- Delete account
+
+### Skills
+
+- Add skill
+- Remove skill
+- Prevent duplicate skills
+- Create new skill
+
+### Matching
+
+- One-way match
+- Two-way match
+- No match
+- Match score calculation
+
+### Swaps
+
+- Create request
+- Reject self-request
+- Reject invalid skill
+- Prevent duplicate pending request
+- Accept request
+- Reject request
+- Cancel request
+- Mark completion
+- Prevent duplicate completion
+- Complete only after both sides finish
+
+### Reviews
+
+- Review completed swap
+- Reject review for incomplete swap
+- Prevent duplicate review
+- Validate rating range
+
+---
+
+## Deployment
+
+SkillSwap is deployed using separate frontend and backend services.
 
 ### Frontend
 
-Hosted on **Vercel**.
+Hosted on:
+
+**Vercel**
+
+Live application:
+
+https://skill-swap-peer-to-peer-skill-excha-lovat.vercel.app
 
 ### Backend
 
-Hosted on **Render**.
+Hosted on:
+
+**Render**
+
+Production API:
+
+https://skillswap-api-ul44.onrender.com
 
 ### Database
 
-Hosted using **MongoDB Atlas**.
+Hosted using:
 
-### Images
+**MongoDB**
 
-Stored using **Cloudinary**.
+### Image Storage
+
+Profile avatars are stored using:
+
+**Cloudinary**
 
 ---
 
-# 🔄 SPA Routing
-
-The React application uses client-side routing.
-
-A Vercel rewrite configuration is included so routes such as:
+## Production Architecture
 
 ```text
-/profile
-/discover
-/swaps
-/dashboard
+                        Internet
+                           │
+                           ▼
+                 ┌───────────────────┐
+                 │      Vercel       │
+                 │   React Frontend  │
+                 └─────────┬─────────┘
+                           │
+                           │ HTTPS
+                           ▼
+                 ┌───────────────────┐
+                 │      Render       │
+                 │  Express Backend  │
+                 └──────┬───────┬────┘
+                        │       │
+                        │       │
+                        ▼       ▼
+                 ┌──────────┐  ┌────────────┐
+                 │ MongoDB  │  │ Cloudinary │
+                 │ Database │  │   Images   │
+                 └──────────┘  └────────────┘
 ```
 
-continue to work correctly when the browser is refreshed directly.
+---
 
-The frontend configuration is located at:
+## SPA Routing
+
+The frontend is a React single-page application.
+
+Routes such as:
+
+```text
+/login
+/register
+/dashboard
+/discover
+/profile
+/swaps
+```
+
+are handled by React Router.
+
+For production deployment on Vercel, the project includes:
 
 ```text
 client/vercel.json
 ```
 
----
-
-# 💡 Engineering Decisions
-
-## Why MERN?
-
-MERN provides a consistent JavaScript-based development stack across the frontend and backend.
-
-It also makes it straightforward to build and maintain a REST-based full-stack application.
-
----
-
-## Why MongoDB?
-
-SkillSwap works with document-oriented data such as:
-
-- User profiles
-- Skills
-- Swap requests
-- Reviews
-
-MongoDB provides a natural document model while Mongoose provides schemas, validation and relationships through references.
-
----
-
-## Why JWT?
-
-JWT allows the backend to authenticate API requests without maintaining server-side session state.
-
-The token contains the authenticated user's identity and is verified by backend middleware before protected operations are performed.
-
----
-
-## Why bcrypt?
-
-Passwords should never be stored in plain text.
-
-bcrypt is used to hash passwords before storing them in MongoDB.
-
-During login:
+with a rewrite configuration that sends unknown routes back to:
 
 ```text
-Plain Password
-      ↓
-bcrypt comparison
-      ↓
-Stored Password Hash
-      ↓
-Match?
+/index.html
 ```
+
+This prevents refreshes on routes such as `/profile` or `/dashboard` from returning a 404.
 
 ---
 
-## Why Polling Instead of WebSockets?
+## Engineering Decisions
 
-SkillSwap does not currently require high-frequency real-time communication.
+### 1. MERN Stack
 
-Polling provides sufficiently fresh data while keeping the architecture simple.
+The MERN stack was selected because the project is heavily data-driven and requires:
 
-This avoids introducing:
+- REST APIs
+- Authentication
+- User profiles
+- Relationships between users and skills
+- CRUD operations
+- Flexible document structures
+
+### 2. JWT Authentication
+
+JWT provides a simple stateless authentication mechanism for the REST API.
+
+The server does not need to maintain a traditional session store.
+
+### 3. Mongoose
+
+Mongoose provides:
+
+- Schema validation
+- Model abstraction
+- References
+- Population
+- Middleware
+- MongoDB interaction
+
+### 4. Deterministic Matching
+
+The matching algorithm uses set intersections rather than AI.
+
+Advantages:
+
+- Explainable
+- Predictable
+- Fast
+- Easy to test
+- No training data
+- No external AI API
+
+### 5. Cloudinary for Images
+
+Local filesystem storage is not reliable as permanent storage in production environments.
+
+Cloudinary provides dedicated image storage and returns a secure URL that can be stored in MongoDB.
+
+### 6. Polling Instead of WebSockets
+
+The project does not need high-frequency real-time communication.
+
+Lightweight polling provides sufficiently fresh data without introducing:
 
 - WebSocket infrastructure
 - Connection management
-- Additional real-time state handling
-- More complex deployment requirements
+- Event synchronization
+- Additional server complexity
 
-If SkillSwap later introduces real-time chat or instant notifications, WebSockets would be a suitable next step.
+### 7. Simple MongoDB Relationships
 
----
+Skills are referenced through ObjectIds.
 
-## Why Cloudinary?
+The project intentionally avoids unnecessary join collections.
 
-The backend should not rely on local filesystem storage for production user images.
-
-Cloudinary provides:
-
-- Dedicated image storage
-- CDN delivery
-- Persistent URLs
-- Production-friendly image handling
-
-The backend stores the resulting image URL.
+This makes the data model easier to understand while remaining appropriate for the current scale.
 
 ---
 
-# 🧩 Challenges & Solutions
+## Challenges and Solutions
 
-## 1. Matching Users by Complementary Skills
+### Challenge 1 — Matching Users
 
-### Challenge
+Users need complementary skills rather than simply similar skills.
 
-Users may teach several skills while wanting to learn several others.
+#### Solution
 
-### Solution
+The matching algorithm checks both directions:
 
-The application compares teaching and learning skill sets using intersections.
+```text
+What I want ← What they teach
 
-This produces an explainable matching system without requiring machine learning.
+What they want ← What I teach
+```
 
----
-
-## 2. Preventing Unauthorized Operations
-
-### Challenge
-
-A logged-in user should not automatically be allowed to modify another user's data.
-
-### Solution
-
-Authorization checks are performed on the backend using the authenticated user's identity and the target resource owner.
+This allows the application to identify genuine skill exchange opportunities.
 
 ---
 
-## 3. Production Image Storage
+### Challenge 2 — Preventing Unauthorized Updates
 
-### Challenge
+A logged-in user should not be able to edit another user's profile.
 
-Storing uploaded images directly on the backend filesystem is unreliable for production deployments.
+#### Solution
 
-### Solution
+Backend controllers compare:
 
-Multer handles the multipart upload in memory and Cloudinary provides persistent image storage.
+```text
+authenticatedUserId
+```
+
+with:
+
+```text
+requestedUserId
+```
+
+and return:
+
+```http
+403 Forbidden
+```
+
+when they do not match.
 
 ---
 
-## 4. Cross-User Data Updates
+### Challenge 3 — Preventing Duplicate Swap Requests
 
-### Challenge
+Users should not be able to repeatedly create the same pending swap request.
+
+#### Solution
+
+The backend checks for an existing pending request before creating a new one.
+
+Database-level uniqueness is also used for the relevant pending-request combination.
+
+---
+
+### Challenge 4 — Two-Sided Completion
+
+A swap should not be completed just because one participant says they are done.
+
+#### Solution
+
+Two fields are maintained:
+
+```text
+senderCompleted
+receiverCompleted
+```
+
+The swap becomes:
+
+```text
+Completed
+```
+
+only when both values are true.
+
+---
+
+### Challenge 5 — Production Avatar Storage
+
+Local uploaded files are not suitable as permanent storage for a production deployment.
+
+#### Solution
+
+The backend receives the image using Multer memory storage and uploads the image buffer to Cloudinary.
+
+The returned secure URL is saved to MongoDB.
+
+---
+
+### Challenge 6 — Keeping Data Fresh
 
 Changes made by one user should eventually become visible to other users.
 
-### Solution
+#### Solution
 
-Selected pages use lightweight polling to periodically fetch the latest server state.
+Relevant pages periodically fetch fresh server data using lightweight polling.
 
-This provides near-real-time updates without introducing WebSocket complexity.
-
----
-
-## 5. SPA Refresh Handling
-
-### Challenge
-
-React Router handles routes on the client, but production servers may not automatically know how to serve those routes.
-
-### Solution
-
-A Vercel rewrite sends application routes back to `index.html`, allowing React Router to handle navigation.
+This provides near-real-time behavior without introducing WebSockets.
 
 ---
 
-# 📈 Scalability Considerations
+### Challenge 7 — Account Deletion
 
-The current architecture is intentionally simple and suitable for the project's scope.
+Deleting only the User document could leave related data behind.
 
-If usage grows significantly, possible improvements include:
+#### Solution
 
-- Database indexes for frequent searches
-- Pagination for large user lists
-- Redis caching
-- Background jobs for notifications
-- Rate limiting
-- CDN optimization
-- WebSocket-based real-time communication
-- Dedicated search infrastructure
+The deletion flow removes:
 
-These are intentionally not part of the current implementation because they would add complexity without being necessary for the current scale.
+- User
+- Related swap requests
+- Related reviews
+- Cloudinary avatar
+
+before completing the logout and redirect flow.
 
 ---
 
-# 🚧 Future Improvements
+### Challenge 8 — React SPA Refreshes
 
-Potential future features include:
+Refreshing a nested route such as:
 
-### Communication
+```text
+/profile
+```
 
-- Real-time chat
-- Direct messaging
-- WebSocket notifications
+can cause the deployment server to search for a physical `/profile` file.
 
-### Learning
+#### Solution
 
-- Session scheduling
-- Calendar integration
-- Video learning sessions
-- Learning progress tracking
+Vercel rewrites unknown frontend routes to:
 
-### Discovery
+```text
+/index.html
+```
 
-- Improved recommendation ranking
-- Advanced skill filtering
-- Skill verification
-- Skill endorsements
-
-### Account
-
-- Password reset
-- Email verification
-- Email notifications
-- Notification center
-
-### Platform
-
-- Reporting and moderation
-- Admin analytics
-- User reputation improvements
-- Better search and filtering
+allowing React Router to handle the route.
 
 ---
 
-# 📌 Current Project Scope
+## Future Improvements
 
-SkillSwap intentionally focuses on the core peer-to-peer exchange workflow:
+The current version intentionally avoids unnecessary complexity.
+
+Possible future improvements include:
+
+### Real-Time Chat
+
+Allow two swap partners to communicate directly.
+
+Potential technology:
+
+```text
+Socket.IO / WebSockets
+```
+
+### Notifications
+
+Add:
+
+- New swap request notifications
+- Request accepted notifications
+- Swap completed notifications
+- Review notifications
+
+Potential implementation:
+
+```text
+Email
+Push notifications
+In-app notifications
+```
+
+### Scheduling
+
+Allow users to schedule:
+
+- Learning sessions
+- Meeting times
+- Recurring exchanges
+
+### Video Sessions
+
+Integrate video communication for remote skill exchanges.
+
+### Skill Verification
+
+Allow users to verify skills through:
+
+- Endorsements
+- Assessments
+- Certificates
+- Peer verification
+
+### Smarter Recommendations
+
+The current deterministic algorithm could eventually be extended with:
+
+- Skill weighting
+- User preferences
+- Availability matching
+- Experience compatibility
+- Historical swap success
+- Recommendation ranking
+
+Machine learning is intentionally not part of the current implementation.
+
+---
+
+## Current Project Scope
+
+SkillSwap currently focuses on the core peer-to-peer skill exchange workflow:
 
 ```text
 Authentication
       ↓
-Profiles
+Profile
       ↓
 Skills
       ↓
-Discovery
-      ↓
 Matching
+      ↓
+Discovery
       ↓
 Swap Requests
       ↓
@@ -1389,30 +1799,74 @@ Swap Completion
 Reviews
 ```
 
-Features such as real-time chat, video calls and complex recommendation systems are intentionally left for future iterations rather than adding unnecessary complexity to the current architecture.
+The project intentionally does not currently include:
+
+- Real-time chat
+- Video calling
+- Calendar integration
+- Advanced recommendation AI
+- Skill verification
+- Push notification infrastructure
+
+Keeping these features outside the current scope makes the application easier to understand, test, deploy, and maintain.
 
 ---
 
-# 👨‍💻 Author
+## Why This Project Is More Than CRUD
 
-## Srijan Kumar
+Although SkillSwap contains CRUD operations, the project goes beyond basic CRUD functionality.
 
-Computer Science Engineering graduate focused on full-stack web development.
+The application includes:
 
-### Technologies
+- JWT authentication
+- Password hashing
+- Authorization
+- Protected routes
+- File uploads
+- Cloud image storage
+- Database relationships
+- Deterministic recommendation logic
+- Search and filtering
+- Request lifecycle management
+- Two-sided transaction completion
+- Review and rating logic
+- Data cleanup
+- Polling-based updates
+- Production deployment
+- SPA routing configuration
+- Docker support
 
-`JavaScript` · `React` · `Node.js` · `Express` · `MongoDB` · `AWS` · `Docker`
-
-### Profiles
-
-- GitHub: https://github.com/srijan2312
-- LinkedIn: Add your LinkedIn profile URL
-- Portfolio: Add your portfolio URL
+The main engineering challenge is coordinating these pieces into one complete workflow.
 
 ---
 
-# ⭐ SkillSwap
+## Author
 
-**Teach what you know. Learn what you want.**
+### Srijan Kumar
 
-A simple idea built into a complete full-stack application for peer-to-peer skill exchange.
+Computer Science Engineering Graduate  
+Full-Stack Developer
+
+**Primary interests:**
+
+- React
+- JavaScript
+- Node.js
+- Express.js
+- MongoDB
+- Full-Stack Web Development
+- Cloud and Deployment
+
+### Project Repository
+
+https://github.com/srijan2312/SkillSwap-Peer-to-Peer-Skill-Exchange-Platform
+
+### Live Application
+
+https://skill-swap-peer-to-peer-skill-excha-lovat.vercel.app
+
+---
+
+## License
+
+This project was created as a personal full-stack development project for learning, portfolio development, and demonstrating practical software engineering skills.
