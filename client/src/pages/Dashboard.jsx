@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api, { apiErrorMessage } from '../services/api';
 import { useAuth } from '../context/AuthContext';
@@ -11,34 +11,73 @@ import SwapRequestForm from '../components/SwapRequestForm';
 import { useSwapRequest } from '../hooks/useSwapRequest';
 import { timeAgo } from '../utils/format';
 
+// Dashboard data is refreshed periodically so changes made by another user
+// appear without requiring a manual browser refresh.
+const POLL_INTERVAL_MS = 5000;
+
 export default function Dashboard() {
   const { user } = useAuth();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
+  const pollRef = useRef(null);
+
   const swap = useSwapRequest(user?._id);
+
+  // Fetch dashboard data.
+  // Initial loading shows the normal page loader.
+  // Background polling stays silent so the page does not flash every 5 seconds.
+  const fetchDashboard = useCallback(async (initial = false) => {
+    if (initial) setLoading(true);
+
+    try {
+      const { data } = await api.get('/dashboard');
+      setData(data);
+      setError('');
+    } catch (err) {
+      // Only show an error during the initial request.
+      // If a background refresh fails, keep showing the last good data.
+      if (initial) {
+        setError(apiErrorMessage(err, 'Could not load your dashboard.'));
+      }
+    } finally {
+      if (initial) setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
-    (async () => {
-      try {
-        const { data } = await api.get('/dashboard');
-        if (!cancelled) setData(data);
-      } catch (err) {
-        if (!cancelled) setError(apiErrorMessage(err, 'Could not load your dashboard.'));
-      } finally {
-        if (!cancelled) setLoading(false);
+
+    // Load immediately when the page opens.
+    fetchDashboard(true);
+
+    // Then refresh periodically while this page is open.
+    pollRef.current = setInterval(() => {
+      if (!cancelled) {
+        fetchDashboard(false);
       }
-    })();
+    }, POLL_INTERVAL_MS);
+
+    // Stop polling when the user leaves the page.
     return () => {
       cancelled = true;
+
+      if (pollRef.current) {
+        clearInterval(pollRef.current);
+      }
     };
-  }, []);
+  }, [fetchDashboard]);
 
   const handleSwapSubmit = async (payload) => {
     const ok = await swap.submit(payload);
-    if (ok) setNotice(`Swap request sent to ${swap.match.user.name}.`);
+
+    if (ok) {
+      setNotice(`Swap request sent to ${swap.match.user.name}`);
+
+      // Immediately refresh our own dashboard after sending a request.
+      fetchDashboard(false);
+    }
   };
 
   if (loading) return <Loader label="Loading your dashboard…" />;
@@ -54,12 +93,19 @@ export default function Dashboard() {
   return (
     <div>
       <h1 className="text-2xl font-bold text-white">Welcome back, {firstName}</h1>
-      <p className="mt-1 text-sm text-slate-400">Here&apos;s what&apos;s happening with your skill swaps.</p>
+
+      <p className="mt-1 text-sm text-slate-400">
+        Here&apos;s what&apos;s happening with your skill swaps.
+      </p>
 
       {notice && (
         <div className="mt-4 flex items-center justify-between gap-4 rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-300">
           <span>{notice}</span>
-          <button onClick={() => setNotice('')} className="shrink-0 hover:text-emerald-200">
+
+          <button
+            onClick={() => setNotice('')}
+            className="shrink-0 hover:text-emerald-200"
+          >
             Dismiss
           </button>
         </div>
@@ -76,11 +122,18 @@ export default function Dashboard() {
 
       {/* Recommended partners */}
       <div className="mt-10 flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-white">Recommended Skill Partners</h2>
-        <Link to="/discover" className="text-sm font-medium text-violet-300 hover:text-violet-200">
+        <h2 className="text-lg font-semibold text-white">
+          Recommended Skill Partners
+        </h2>
+
+        <Link
+          to="/discover"
+          className="text-sm font-medium text-violet-300 hover:text-violet-200"
+        >
           View all →
         </Link>
       </div>
+
       {topMatches.length === 0 ? (
         <div className="mt-4">
           <EmptyState
@@ -93,13 +146,20 @@ export default function Dashboard() {
       ) : (
         <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
           {topMatches.slice(0, 3).map((m) => (
-            <UserCard key={m.user._id} match={m} onSwap={swap.open} />
+            <UserCard
+              key={m.user._id}
+              match={m}
+              onSwap={swap.open}
+            />
           ))}
         </div>
       )}
 
       {/* Recent activity */}
-      <h2 className="mt-10 text-lg font-semibold text-white">Recent Activity</h2>
+      <h2 className="mt-10 text-lg font-semibold text-white">
+        Recent Activity
+      </h2>
+
       {recentActivity.length === 0 ? (
         <div className="mt-4">
           <EmptyState
@@ -116,11 +176,19 @@ export default function Dashboard() {
             >
               <span
                 className={`h-2 w-2 shrink-0 rounded-full ${
-                  a.type === 'review' ? 'bg-blue-500' : 'bg-violet-500'
+                  a.type === 'review'
+                    ? 'bg-blue-500'
+                    : 'bg-violet-500'
                 }`}
               />
-              <p className="flex-1 text-sm text-slate-300">{a.text}</p>
-              <span className="shrink-0 text-xs text-slate-500">{timeAgo(a.createdAt)}</span>
+
+              <p className="flex-1 text-sm text-slate-300">
+                {a.text}
+              </p>
+
+              <span className="shrink-0 text-xs text-slate-500">
+                {timeAgo(a.createdAt)}
+              </span>
             </li>
           ))}
         </ul>
@@ -128,7 +196,10 @@ export default function Dashboard() {
 
       {/* Swap request modal */}
       {swap.isOpen && (
-        <Modal title={`Swap skills with ${swap.match.user.name}`} onClose={swap.close}>
+        <Modal
+          title={`Swap skills with ${swap.match.user.name}`}
+          onClose={swap.close}
+        >
           {swap.partnerLoading ? (
             <Loader label="Loading profile…" />
           ) : (
