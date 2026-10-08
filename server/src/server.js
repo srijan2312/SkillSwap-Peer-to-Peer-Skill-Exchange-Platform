@@ -20,6 +20,11 @@ app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 // Health check — quick way to confirm the API is up.
 app.get('/', (req, res) => res.json({ message: 'SkillSwap API is running' }));
 
+// Dedicated health endpoint for monitoring and deployment checks.
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
+
 // Route modules — one file per resource keeps the entry point readable.
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/users', require('./routes/users'));
